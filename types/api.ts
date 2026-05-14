@@ -45,8 +45,9 @@ export interface ApiMatch {
   strHomeTeamBadge: string;
   strAwayTeamBadge: string;
   strVenue: string;
-  strStatus: string | null; // "Match Finished" | "In Progress" | null
+  strStatus: string | null; 
   strThumb: string;
+  strSport:string;
 }
 
 export interface ApiStanding {
