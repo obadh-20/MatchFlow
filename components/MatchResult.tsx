@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
+import { useEffect, useState } from "react";
+
 import type { Match } from "@/types/index";
 
 type TrendingTeam = {
@@ -28,13 +28,6 @@ const standings: StandingTeam[] = [
   { position: 3, name: "Liverpool", points: 38 },
 ];
 
-function formatScore(homeScore: number | null, awayScore: number | null): string {
-  if (homeScore !== null && awayScore !== null) {
-    return `${homeScore}:${awayScore}`;
-  }
-  return "VS";
-}
-
 function getStatusBadge(status: string): { label: string; className: string } {
   switch (status) {
     case "live":
@@ -51,7 +44,7 @@ function getStatusBadge(status: string): { label: string; className: string } {
 }
 
 export default function MatchesCarousel() {
-  const [emblaRef] = useEmblaCarousel({ align: "start", dragFree: true });
+  
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,103 +78,9 @@ export default function MatchesCarousel() {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <div className="relative w-full bg-[var(--color-bg-card)] md:h-80 mt-3">
+    <div className="w-full bg-[var(--color-bg-card)] md:h-full mt-3">
       {/* Carousel */}
-      <div className="overflow-hidden h-full" ref={emblaRef}>
-        <div className="flex gap-4 items-center h-full md:px-8">
-          {loading ? (
-            <>
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="min-w-[320px] w-[320px] h-[200px] bg-gray-100 rounded-2xl animate-pulse"
-                />
-              ))}
-            </>
-          ) : error ? (
-            <div className="min-w-[320px] w-[320px] h-[200px] flex items-center justify-center rounded-2xl border border-red-300 text-red-500 text-sm">
-              {error}
-            </div>
-          ) : matches.length === 0 ? (
-            <div className="min-w-[320px] w-[320px] h-[200px] flex items-center justify-center rounded-2xl border border-gray-200 text-gray-400 text-sm">
-              No matches found
-            </div>
-          ) : (
-            matches.map((match) => (
-              <div
-                key={match.id}
-                className="min-w-[320px] w-[320px] h-[200px] bg-[var(--color-bg-card)] rounded shadow relative flex flex-col"
-              >
-                {/* League Name - Top Right */}
-                <p className="absolute top-4 right-4 text-[11px] text-gray-400">
-                  {match.league}
-                </p>
-
-                {/* Teams and Score Middle */}
-                <div className="flex justify-between items-center mt-5 px-6 h-[80%]">
-                  {/* Home Team */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                      {match.homeTeamBadgeUrl ? (
-                        <img
-                          src={match.homeTeamBadgeUrl}
-                          alt={match.homeTeam ?? "Home"}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xs font-bold text-gray-500">
-                          {(match.homeTeam ?? "?").charAt(0)}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">
-                      {match.homeTeam ?? "?"}
-                    </span>
-                  </div>
-
-                  {/* Result Score */}
-                  <span className="font-bold text-[30px] leading-none text-[var(--color-primary)]">
-                    {formatScore(match.homeScore, match.awayScore)}
-                  </span>
-
-                  {/* Away Team */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                      {match.awayTeamBadgeUrl ? (
-                        <img
-                          src={match.awayTeamBadgeUrl}
-                          alt={match.awayTeam ?? "Away"}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xs font-bold text-gray-500">
-                          {(match.awayTeam ?? "?").charAt(0)}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">
-                      {match.awayTeam ?? "?"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Match Details Link */}
-                <div className="h-[36px] w-full text-[12px] flex items-center justify-center rounded-b border-t border-gray-100 mt-2 text-[var(--color-primary)] bg-[var(--color-primary-light)]">
-                  Match Details
-                </div>
-              </div>
-            ))
-          )}
-
-          {/* Discover Card */}
-          <div className="min-w-[320px] w-[320px] h-[200px] flex items-center justify-center border-2 border-dashed rounded-2xl text-gray-400 shrink-0">
-            Discover
-          </div>
-        </div>
-      </div>
-
-      {/* Gradient Blur Right */}
-      <div className="pointer-events-none absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-white to-transparent" />
+     
       <div className="w-full max-w-7xl mx-auto px-4 py-8">
         {/* Main 2 Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">

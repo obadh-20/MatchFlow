@@ -58,6 +58,7 @@ export interface Match {
   venue: string;
   status: MatchStatus; // computed, not raw string
   thumbnailUrl: string;
+  liveTime?: string; // e.g. "63‎’‎" for live matches
 }
 
 export interface Standing {
