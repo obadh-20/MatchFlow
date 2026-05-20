@@ -72,6 +72,158 @@ export interface ApiStanding {
   dateUpdated: string;
 }
 
+// --- RapidAPI match types (new free-api-live-football-data API) ---
+
+export interface ApiRapidMatch {
+  id: number;
+  leagueId: number;
+  time: string; // "13.05.2026 21:00"
+  home: {
+    id: number;
+    score: number | null;
+    name: string;
+    longName: string;
+  };
+  away: {
+    id: number;
+    score: number | null;
+    name: string;
+    longName: string;
+  };
+  eliminatedTeamId: number | null;
+  statusId: number;
+  tournamentStage: string; // "31"
+  status: {
+    utcTime: string; // "2026-05-13T19:00:00.000Z"
+    halfs: {
+      firstHalfStarted?: string;
+      secondHalfStarted?: string;
+    };
+    periodLength: number;
+    finished: boolean;
+    started: boolean;
+    cancelled: boolean;
+    awarded: boolean;
+    scoreStr: string; // "3 - 0"
+    reason: {
+      short: string;
+      shortKey: string;
+      long: string;
+      longKey: string;
+    };
+  };
+  timeTS: number;
+}
+
+export interface ApiRapidLiveMatch {
+  id: number;
+  leagueId: number;
+  time: string;
+  home: {
+    id: number;
+    score: number | null;
+    name: string;
+    longName: string;
+  };
+  away: {
+    id: number;
+    score: number | null;
+    name: string;
+    longName: string;
+  };
+  eliminatedTeamId: number | null;
+  statusId: number;
+  tournamentStage: string;
+  status: {
+    utcTime: string;
+    halfs: {
+      firstHalfStarted?: string;
+      secondHalfStarted?: string;
+    };
+    periodLength: number;
+    finished: boolean;
+    started: boolean;
+    cancelled: boolean;
+    ongoing: boolean;
+    scoreStr: string;
+    liveTime: {
+      short: string;
+      shortKey: string;
+      long: string;
+      longKey: string;
+      maxTime: number;
+      basePeriod: number;
+      addedTime: number;
+    };
+  };
+  timeTS: number;
+}
+
+export interface ApiRapidMatchDetailTeam {
+  name: string;
+  id: number;
+}
+
+export interface ApiRapidMatchDetailColors {
+  darkMode: {
+    home: string;
+    away: string;
+  };
+  lightMode: {
+    home: string;
+    away: string;
+  };
+  fontDarkMode: {
+    home: string;
+    away: string;
+  };
+  fontLightMode: {
+    home: string;
+    away: string;
+  };
+}
+
+export interface ApiRapidMatchDetail {
+  matchId: string;
+  matchName: string;
+  matchRound: string;
+  teamColors: ApiRapidMatchDetailColors;
+  leagueId: number;
+  leagueName: string;
+  leagueRoundName: string;
+  parentLeagueId: number;
+  countryCode: string;
+  homeTeam: ApiRapidMatchDetailTeam;
+  awayTeam: ApiRapidMatchDetailTeam;
+  coverageLevel: string;
+  matchTimeUTC: string;
+  matchTimeUTCDate: string;
+  started: boolean;
+  finished: boolean;
+  gender: string;
+}
+
+export interface ApiRapidMatchDetailResponse {
+  status: string;
+  response: {
+    detail: ApiRapidMatchDetail;
+  };
+}
+
+export interface ApiRapidLiveResponse {
+  status: string; // "success"
+  response: {
+    live: ApiRapidLiveMatch[];
+  };
+}
+
+export interface ApiRapidMatchesResponse {
+  status: string; // "success"
+  response: {
+    matches: ApiRapidMatch[];
+  };
+}
+
 // API response wrappers — what the endpoint actually returns
 export interface ApiTeamsResponse {
   teams: ApiTeam[] | null;

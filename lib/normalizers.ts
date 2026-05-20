@@ -1,5 +1,5 @@
 // lib/normalizers.ts
-import type { ApiStanding, ApiMatch, ApiTeam, ApiPlayer } from "@/types/api";
+import type { ApiStanding, ApiMatch, ApiTeam, ApiPlayer, ApiRapidMatch, ApiRapidLiveMatch } from "@/types/api";
 import type {
   Standing,
   Match,
@@ -102,5 +102,86 @@ export function normalizePlayer(raw: ApiPlayer): Player {
     dateOfBirth: raw.dateBorn,
     isActive: raw.strStatus === "Active",
     position: raw.strPosition,
+  };
+}
+
+const LEAGUE_NAMES: Record<number, string> = {
+  47: "Premier League",
+  87: "La Liga",
+  135: "Serie A",
+  54: "Bundesliga",
+  53: "Ligue 1",
+};
+
+function getLeagueName(leagueId: number): string {
+  return LEAGUE_NAMES[leagueId] ?? `League ${leagueId}`;
+}
+
+function getRapidMatchStatus(ms: ApiRapidMatch["status"]): MatchStatus {
+  if (ms.cancelled) return "postponed";
+  if (ms.finished) return "finished";
+  if (ms.started) return "live";
+  return "upcoming";
+}
+
+function getRapidLiveMatchStatus(ms: ApiRapidLiveMatch["status"]): MatchStatus {
+  if (ms.cancelled) return "postponed";
+  if (ms.finished) return "finished";
+  if (ms.started) return "live";
+  return "upcoming";
+}
+
+export function normalizeRapidLiveMatch(raw: ApiRapidLiveMatch): Match {
+  const utcDate = new Date(raw.status.utcTime);
+  const dateStr = utcDate.toISOString().split("T")[0];
+  const timeStr = utcDate.toTimeString().split(" ")[0];
+
+  return {
+    id: raw.id,
+    date: dateStr,
+    time: timeStr,
+    kickoff: raw.status.utcTime,
+    title: `${raw.home.name} vs ${raw.away.name}`,
+    league: getLeagueName(raw.leagueId),
+    leagueBadgeUrl: "",
+    season: "",
+    homeTeam: raw.home.longName || raw.home.name,
+    awayTeam: raw.away.longName || raw.away.name,
+    homeScore: raw.home.score ?? null,
+    awayScore: raw.away.score ?? null,
+    round: Number(raw.tournamentStage),
+    homeTeamBadgeUrl: "",
+    awayTeamBadgeUrl: "",
+    venue: "",
+    status: getRapidLiveMatchStatus(raw.status),
+    thumbnailUrl: "",
+    liveTime: raw.status.liveTime?.short?.trim() || undefined,
+  };
+}
+
+export function normalizeRapidMatch(raw: ApiRapidMatch): Match {
+  const utcDate = new Date(raw.status.utcTime);
+  const dateStr = utcDate.toISOString().split("T")[0];
+  const timeStr = utcDate.toTimeString().split(" ")[0];
+
+  return {
+    id: raw.id,
+    date: dateStr,
+    time: timeStr,
+    kickoff: raw.status.utcTime,
+    title: `${raw.home.name} vs ${raw.away.name}`,
+    league: getLeagueName(raw.leagueId),
+    leagueBadgeUrl: "",
+    season: "",
+    homeTeam: raw.home.longName || raw.home.name,
+    awayTeam: raw.away.longName || raw.away.name,
+    homeScore: raw.home.score ?? null,
+    awayScore: raw.away.score ?? null,
+    round: Number(raw.tournamentStage),
+    homeTeamBadgeUrl: "",
+    awayTeamBadgeUrl: "",
+    venue: "",
+    status: getRapidMatchStatus(raw.status),
+    thumbnailUrl: "",
   };
 }
