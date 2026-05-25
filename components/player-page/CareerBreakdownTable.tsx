@@ -81,7 +81,7 @@ export default function CareerBreakdownTable({ career }: CareerBreakdownTablePro
         </table>
       </div>
       <div className="mt-4 pt-3 border-t border-gray-100 text-center">
-        <button className="text-xs font-semibold text-[var(--color-primary)] hover:underline">
+        <button disabled aria-disabled className="text-xs font-semibold text-[var(--color-primary)] opacity-60 cursor-not-allowed">
           View Full History →
         </button>
       </div>

@@ -57,7 +57,9 @@ export default function PlayerHeroCard({ profile, statSummary }: PlayerHeroCardP
             <div className="flex items-center gap-2 mt-4">
               <Button
                 size="sm"
-                className="bg-white text-[var(--color-primary)] hover:bg-white/90 font-semibold text-xs"
+                disabled
+                aria-disabled
+                className="bg-white text-[var(--color-primary)] hover:bg-white/90 font-semibold text-xs opacity-60 cursor-not-allowed"
               >
                 <UserPlus className="w-3.5 h-3.5" />
                 Follow
@@ -65,7 +67,9 @@ export default function PlayerHeroCard({ profile, statSummary }: PlayerHeroCardP
               <Button
                 size="sm"
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10"
+                disabled
+                aria-disabled
+                className="border-white/30 text-white hover:bg-white/10 opacity-60 cursor-not-allowed"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Share

@@ -43,6 +43,7 @@ const Navbar = () => {
         );
         if (!response.ok) throw new Error("Search failed");
         const data = await response.json();
+        if (controller.signal.aborted) return;
         const searchResults = data?.response ?? data?.results ?? null;
         setResults(searchResults);
         setShowDropdown(true);
@@ -50,11 +51,14 @@ const Navbar = () => {
         if (err instanceof DOMException && err.name === "AbortError") {
           return;
         }
+        if (controller.signal.aborted) return;
         setResults(null);
         setSearchError("Search failed. Please try again.");
         setShowDropdown(true);
       } finally {
-        setSearchLoading(false);
+        if (!controller.signal.aborted) {
+          setSearchLoading(false);
+        }
       }
     };
 

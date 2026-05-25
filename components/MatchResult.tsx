@@ -216,6 +216,7 @@ export default function MatchesCarousel() {
                                   src={match.homeTeamBadgeUrl}
                                   alt={match.homeTeam ?? "Home"}
                                   fill
+                                  sizes="48px"
                                   className="object-cover"
                                 />
                               ) : (
@@ -244,6 +245,7 @@ export default function MatchesCarousel() {
                                   src={match.awayTeamBadgeUrl}
                                   alt={match.awayTeam ?? "Away"}
                                   fill
+                                  sizes="48px"
                                   className="object-cover"
                                 />
                               ) : (
@@ -291,6 +293,7 @@ export default function MatchesCarousel() {
                           src={`https://picsum.photos/seed/${team.name}/36/36`}
                           alt={team.name}
                           fill
+                          sizes="36px"
                           className="object-cover"
                         />
                       </div>

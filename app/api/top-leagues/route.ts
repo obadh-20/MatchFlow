@@ -21,6 +21,7 @@ export async function GET() {
     const response = await axios.request({
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-popular-leagues",
+      timeout: 5000,
       headers: {
         "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
@@ -32,8 +33,8 @@ export async function GET() {
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
-      console.log(status);
-      console.log(error.response?.data);
+      console.error(status);
+      console.error(error.response?.data);
 
       // If quota exceeded (429), return mock data so the UI still works
       if (status === 429) {

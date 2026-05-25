@@ -3,20 +3,32 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import type { Team } from "@/types/index";
 
 export default function TeamsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
+  const activeControllerRef = useRef<AbortController | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
+
+    // Cancel any previous pending request
+    if (activeControllerRef.current) {
+      activeControllerRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    activeControllerRef.current = controller;
+    const query = searchTerm.trim();
+    setSubmittedQuery(query);
 
     try {
       setLoading(true);
@@ -24,20 +36,38 @@ export default function TeamsPage() {
       setSearched(true);
       setTeams([]);
 
-      const response = await fetch(`/api/teams?t=${encodeURIComponent(searchTerm)}`);
+      const response = await fetch(`/api/teams?t=${encodeURIComponent(query)}`, { signal: controller.signal });
 
       if (!response.ok) {
         throw new Error("Failed to fetch teams");
       }
 
       const data = await response.json();
-      setTeams(data);
+      if (!controller.signal.aborted) {
+        setTeams(data);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      if (err instanceof DOMException && err.name === "AbortError") {
+        return;
+      }
+      if (!controller.signal.aborted) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      }
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (activeControllerRef.current) {
+        activeControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-10">
@@ -87,7 +117,7 @@ export default function TeamsPage() {
       {/* Empty state */}
       {searched && !loading && !error && teams.length === 0 && (
         <div className="min-h-[200px] flex items-center justify-center rounded-2xl border border-gray-200 text-gray-400 text-sm">
-          No teams found for &ldquo;{searchTerm}&rdquo;
+          No teams found for &ldquo;{submittedQuery}&rdquo;
         </div>
       )}
 

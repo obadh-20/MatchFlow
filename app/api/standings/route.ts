@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
         params: {
           l: leagues[league],
         },
+        timeout: 5000,
       }
     );
 

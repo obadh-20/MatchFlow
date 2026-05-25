@@ -175,7 +175,7 @@ X-RapidAPI-Key=your-rapidapi-key-here
 
 ## Folder Structure
 
-```
+```text
 real-time-football/
 ├── app/                          # Next.js App Router pages & API routes
 │   ├── api/                      # API route handlers (backend proxies)
@@ -304,7 +304,7 @@ For detailed request/response schemas and error codes, see [API.md](./API.md).
 
 ### Data Flow
 
-```
+```text
 User Browser
     │
     ▼

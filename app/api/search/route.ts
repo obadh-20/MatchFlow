@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const apiKey = process.env["X-RapidAPI-Key"];
   if (!apiKey) {
     console.log("API key not configured — using mock data for search");
-    const searchTerm = query.toLowerCase();
+    const searchTerm = query.trim().toLowerCase();
     const filtered = {
       players: mockSearchResults.players.filter(
         (p) =>
@@ -53,6 +53,7 @@ export async function GET(req: NextRequest) {
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-all-search",
       params: { search: query },
+      timeout: 5000,
       headers: {
         "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
@@ -63,6 +64,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(response.data);
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
+      if (error.code === "ECONNABORTED") {
+        return NextResponse.json(
+          { error: "Search request timed out" },
+          { status: 504 }
+        );
+      }
+
       const status = error.response?.status;
       console.log(status);
 
@@ -72,7 +80,7 @@ export async function GET(req: NextRequest) {
           "API quota exceeded — filtering mock data for search"
         );
 
-        const searchTerm = query.toLowerCase();
+        const searchTerm = query.trim().toLowerCase();
 
         const filtered = {
           players: mockSearchResults.players.filter(

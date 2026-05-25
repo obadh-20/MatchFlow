@@ -38,10 +38,11 @@ export async function getLiveMatches(): Promise<Match[]> {
     return [];
   }
 
-  try {
+try {
     const response = await axios.request({
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-current-live",
+      timeout: 5000,
       headers: {
         "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
@@ -109,6 +110,7 @@ export async function getEvents(rawDate?: string): Promise<Match[]> {
         method: "GET",
         url: "https://free-api-live-football-data.p.rapidapi.com/football-get-matches-by-date",
         params: { date },
+        timeout: 5000,
         headers: {
           "x-rapidapi-key": apiKey,
           "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
@@ -162,6 +164,7 @@ export async function getEvents(rawDate?: string): Promise<Match[]> {
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-get-matches-by-date",
       params: { date },
+      timeout: 5000,
       headers: {
         "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",

@@ -37,7 +37,7 @@ export default function PlayerTable({ players }: PlayerTableProps) {
           return (
             <Link
               href={`/player/${id}`}
-              className="font-medium text-gray-900 text-xs hover:text-[var(--color-primary)] transition-colors"
+              className="font-medium text-gray-900 text-xs hover:text-[var(--color-primary)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] focus-visible:outline-offset-2 rounded"
             >
               {name}
             </Link>

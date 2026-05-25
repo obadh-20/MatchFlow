@@ -50,7 +50,7 @@ export default function SimilarPlayersGrid({ players }: SimilarPlayersGridProps)
             </div>
 
             {/* Compare link */}
-            <button className="text-xs font-semibold text-[var(--color-primary)] hover:underline mt-1">
+            <button disabled aria-disabled className="text-xs font-semibold text-[var(--color-primary)] opacity-60 cursor-not-allowed mt-1">
               Compare Stats →
             </button>
           </div>

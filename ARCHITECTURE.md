@@ -15,7 +15,7 @@
 
 MatchFlow follows a **Backend-for-Frontend (BFF)** architecture pattern on top of Next.js's App Router. The application consists of three layers:
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │            Browser (Client)              │
 │  React 19 Components + Client State     │
@@ -214,7 +214,7 @@ This is the highest-priority gap for production readiness. A single regression i
 
 ### Recommended Implementation Order
 
-```
+```text
 Phase 1 (Immediate — 1 week)
 ├── M2.1 — Custom data hooks
 ├── P1.1 — React Query / SWR integration
