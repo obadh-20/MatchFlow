@@ -94,7 +94,7 @@ function MatchDetails() {
       : "Upcoming";
 
   return (
-    <div className="w-full max-3xl mx-auto px-6 py-12 min-h-screen">
+    <div className="w-full max-w-3xl mx-auto px-6 py-12 min-h-screen">
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors"

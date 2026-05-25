@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import Image from "next/image";
 import type { Match } from "@/types/index";
 
 type TrendingTeam = {
@@ -41,6 +41,61 @@ function getStatusBadge(status: string): { label: string; className: string } {
     default:
       return { label: "UPCOMING", className: "bg-gray-100 text-gray-700" };
   }
+}
+
+function NewsletterBanner() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      setEmail("");
+      // In production, this would call an API endpoint
+    }
+  };
+
+  if (subscribed) {
+    return (
+      <div className="w-full bg-emerald-800 rounded-xl p-6 text-center">
+        <h3 className="text-xl font-bold text-white mb-2">You&rsquo;re subscribed!</h3>
+        <p className="text-emerald-200 text-sm">
+          Thanks for signing up. We&rsquo;ll keep you updated with the latest matches.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full bg-emerald-800 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
+      <div className="flex-1">
+        <h3 className="text-xl font-bold text-white mb-2">
+          Never miss a match again.
+        </h3>
+        <p className="text-emerald-200 text-sm">
+          Get real-time updates, match reminders, and exclusive content
+          delivered straight to your inbox.
+        </p>
+      </div>
+      <div className="flex gap-3 w-full md:w-auto">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          required
+          className="flex-1 md:w-64 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-white/30"
+        />
+        <button
+          type="submit"
+          className="px-5 py-2.5 bg-white text-emerald-800 font-semibold rounded-lg hover:bg-emerald-50 transition-colors"
+        >
+          Join
+        </button>
+      </div>
+    </form>
+  );
 }
 
 export default function MatchesCarousel() {
@@ -155,12 +210,14 @@ export default function MatchesCarousel() {
                         <div className="flex items-center justify-between flex-1">
                           {/* Home Team */}
                           <div className="flex flex-col items-center gap-2 min-w-[80px]">
-                            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                            <div className="relative w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                               {match.homeTeamBadgeUrl ? (
-                                <img
+                                <Image
                                   src={match.homeTeamBadgeUrl}
                                   alt={match.homeTeam ?? "Home"}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  sizes="48px"
+                                  className="object-cover"
                                 />
                               ) : (
                                 <span className="text-xs font-bold text-gray-500">
@@ -182,12 +239,14 @@ export default function MatchesCarousel() {
 
                           {/* Away Team */}
                           <div className="flex flex-col items-center gap-2 min-w-[80px]">
-                            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                            <div className="relative w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                               {match.awayTeamBadgeUrl ? (
-                                <img
+                                <Image
                                   src={match.awayTeamBadgeUrl}
                                   alt={match.awayTeam ?? "Away"}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  sizes="48px"
+                                  className="object-cover"
                                 />
                               ) : (
                                 <span className="text-xs font-bold text-gray-500">
@@ -208,27 +267,7 @@ export default function MatchesCarousel() {
             </section>
 
             {/* Newsletter Banner */}
-            <div className="w-full bg-emerald-800 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Never miss a match again.
-                </h3>
-                <p className="text-emerald-200 text-sm">
-                  Get real-time updates, match reminders, and exclusive content
-                  delivered straight to your inbox.
-                </p>
-              </div>
-              <div className="flex gap-3 w-full md:w-auto">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 md:w-64 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-white/30"
-                />
-                <button className="px-5 py-2.5 bg-white text-emerald-800 font-semibold rounded-lg hover:bg-emerald-50 transition-colors">
-                  Join
-                </button>
-              </div>
-            </div>
+            <NewsletterBanner />
           </div>
 
           {/* Right Column - Sidebar */}
@@ -249,11 +288,13 @@ export default function MatchesCarousel() {
                       <span className="w-6 text-center font-bold text-gray-500 text-sm">
                         {team.rank}
                       </span>
-                      <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                        <img
+                      <div className="relative w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                        <Image
                           src={`https://picsum.photos/seed/${team.name}/36/36`}
                           alt={team.name}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="36px"
+                          className="object-cover"
                         />
                       </div>
                       <span className="font-medium text-gray-800">
