@@ -1,6 +1,7 @@
 // components/match-detail/MatchHeaderCard.tsx
 // Hero match summary card with league, teams, score, and metadata
 
+import Image from "next/image";
 import type { MatchHeaderData } from "@/types/match-detail";
 
 interface MatchHeaderCardProps {
@@ -33,9 +34,9 @@ function StatusPill({ status, liveTime }: { status: MatchHeaderData["status"]; l
 function TeamBadge({ name, badgeUrl, side }: { name: string; badgeUrl: string; side: "home" | "away" }) {
   return (
     <div className={`flex flex-col items-center gap-3 ${side === "home" ? "md:items-end" : "md:items-start"} items-center flex-1`}>
-      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-200">
+      <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-200">
         {badgeUrl ? (
-          <img src={badgeUrl} alt={name} className="w-full h-full object-cover" />
+          <Image src={badgeUrl} alt={name} fill className="object-cover" unoptimized />
         ) : (
           <span className="text-lg md:text-2xl font-bold text-gray-500">
             {name.charAt(0)}
@@ -56,7 +57,7 @@ export default function MatchHeaderCard({ data }: MatchHeaderCardProps) {
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
           {data.leagueBadgeUrl && (
-            <img src={data.leagueBadgeUrl} alt="" className="w-5 h-5 object-contain" />
+            <Image src={data.leagueBadgeUrl} alt="" width={20} height={20} className="object-contain" unoptimized />
           )}
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
             {data.leagueName}

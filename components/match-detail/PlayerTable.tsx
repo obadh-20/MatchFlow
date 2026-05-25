@@ -4,6 +4,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import {
   useReactTable,
   getCoreRowModel,
@@ -28,11 +29,21 @@ export default function PlayerTable({ players }: PlayerTableProps) {
   const columns = useMemo<ColumnDef<PlayerPerformance>[]>(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "id",
         header: "Player",
-        cell: ({ getValue }) => (
-          <span className="font-medium text-gray-900 text-xs">{getValue<string>()}</span>
-        ),
+        cell: ({ getValue, row }) => {
+          const id = getValue<number>();
+          const name = row.original.name;
+          return (
+            <Link
+              href={`/player/${id}`}
+              className="font-medium text-gray-900 text-xs hover:text-[var(--color-primary)] transition-colors"
+            >
+              {name}
+            </Link>
+          );
+        },
+        enableSorting: false,
       },
       {
         accessorKey: "rating",

@@ -240,3 +240,171 @@ export interface ApiMatchesResponse {
 export interface ApiStandingsResponse {
   table: ApiStanding[] | null;
 }
+
+// --- Top Transfers ---
+
+export interface ApiRapidTopTransfer {
+  id: number;
+  player_name: string;
+  age: string;
+  date: string;
+  from_club: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  to_club: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  fee: string;
+  market_value: string;
+  position: string;
+  nationality: string;
+  photo: string;
+  league: string;
+  season: string;
+}
+
+export interface ApiRapidTopTransfersResponse {
+  status: string;
+  response: {
+    transfers: ApiRapidTopTransfer[];
+  };
+}
+
+// --- Popular Leagues ---
+
+export interface ApiRapidLeague {
+  id: number;
+  name: string;
+  country: string;
+  logo: string;
+  flag: string;
+  season: string;
+  seasonName: string;
+  seasonSlug: string;
+}
+
+export interface ApiRapidPopularLeaguesResponse {
+  status: string;
+  response: {
+    leagues: ApiRapidLeague[];
+  };
+}
+
+// --- League Detail ---
+
+export interface ApiRapidLeagueDetailTeam {
+  id: number;
+  name: string;
+  logo: string;
+  position: number;
+  points: number;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;
+}
+
+export interface ApiRapidLeagueDetailTopScorer {
+  id: number;
+  playerName: string;
+  teamName: string;
+  teamLogo: string;
+  goals: number;
+  nationality: string;
+  photo: string;
+}
+
+export interface ApiRapidLeagueDetail {
+  id: number;
+  name: string;
+  country: string;
+  logo: string;
+  flag: string;
+  seasonName: string;
+  seasonSlug: string;
+  teams: ApiRapidLeagueDetailTeam[];
+  topScorers: ApiRapidLeagueDetailTopScorer[];
+}
+
+export interface ApiRapidLeagueDetailResponse {
+  status: string;
+  response: {
+    detail: ApiRapidLeagueDetail;
+  };
+}
+
+// --- Trending News ---
+
+export interface ApiRapidNewsItem {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+  image: string;
+  source: string;
+  date: string;
+  time: string;
+}
+
+export interface ApiRapidTrendingNewsResponse {
+  status: string;
+  response: {
+    news: ApiRapidNewsItem[];
+  };
+}
+
+// --- Search ---
+
+export interface ApiRapidSearchTeam {
+  id: number;
+  name: string;
+  logo: string;
+}
+
+export interface ApiRapidSearchPlayer {
+  id: number;
+  name: string;
+  photo: string;
+  nationality: string;
+  position: string;
+  teamName: string;
+  teamLogo: string;
+}
+
+export interface ApiRapidSearchLeague {
+  id: number;
+  name: string;
+  logo: string;
+  country: string;
+  flag: string;
+}
+
+export interface ApiRapidSearchMatch {
+  id: number;
+  homeTeam: string;
+  awayTeam: string;
+  homeLogo: string;
+  awayLogo: string;
+  leagueName: string;
+  time: string;
+  status: string;
+}
+
+export interface ApiRapidSearchResults {
+  players: ApiRapidSearchPlayer[];
+  teams: ApiRapidSearchTeam[];
+  leagues: ApiRapidSearchLeague[];
+  matches: ApiRapidSearchMatch[];
+}
+
+export interface ApiRapidSearchResponse {
+  status: string;
+  response: ApiRapidSearchResults;
+}

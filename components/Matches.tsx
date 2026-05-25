@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import type { Match } from "@/types/index";
@@ -121,12 +122,14 @@ export default function Matches() {
               <div className="flex justify-between items-center px-6 py-4 flex-1">
                 {/* Home Team */}
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                  <div className="relative w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     {match.homeTeamBadgeUrl ? (
-                      <img
+                      <Image
                         src={match.homeTeamBadgeUrl}
                         alt={match.homeTeam ?? "Home"}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                     ) : (
                       <span className="text-xs font-bold text-gray-500">
@@ -146,12 +149,14 @@ export default function Matches() {
 
                 {/* Away Team */}
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                  <div className="relative w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     {match.awayTeamBadgeUrl ? (
-                      <img
+                      <Image
                         src={match.awayTeamBadgeUrl}
                         alt={match.awayTeam ?? "Away"}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                     ) : (
                       <span className="text-xs font-bold text-gray-500">

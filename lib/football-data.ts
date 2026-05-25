@@ -19,6 +19,10 @@ function formatDate(date: Date): string {
   return `${y}${m}${d}`;
 }
 
+function getApiKey(): string {
+  return process.env["X-RapidAPI-Key"] || "";
+}
+
 /**
  * Fetches live matches and caches them.
  * Cache policy: ~1 min (stale: 10s, revalidate: 60s, expire: 120s)
@@ -27,12 +31,19 @@ export async function getLiveMatches(): Promise<Match[]> {
   "use cache";
   cacheLife({ stale: 10, revalidate: 60, expire: 120 }); // ~1 minute
   cacheTag("live-matches");
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    console.log("API key not configured for live matches — returning empty");
+    return [];
+  }
+
   try {
     const response = await axios.request({
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-current-live",
       headers: {
-        "x-rapidapi-key": process.env["X-RapidAPI-Key"] || "",
+        "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
         "Content-Type": "application/json",
       },
@@ -56,10 +67,11 @@ export async function getLiveMatches(): Promise<Match[]> {
     return liveMatches.map(normalizeRapidLiveMatch);
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      console.log(error.response?.status);
+      console.log(`Live matches API error (status ${error.response?.status})`);
       console.log(error.response?.data);
     }
-    throw error;
+    // Return empty array on error rather than crashing the home page
+    return [];
   }
 }
 
@@ -71,6 +83,12 @@ export async function getEvents(rawDate?: string): Promise<Match[]> {
   "use cache";
   cacheLife({ stale: 3600, revalidate: 21600, expire: 86400 }); // ~1 day
   cacheTag("events");
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    console.log("API key not configured for events — returning empty");
+    return [];
+  }
 
   const dateParam = rawDate;
   const targetDate = dateParam || formatDate(new Date());
@@ -92,7 +110,7 @@ export async function getEvents(rawDate?: string): Promise<Match[]> {
         url: "https://free-api-live-football-data.p.rapidapi.com/football-get-matches-by-date",
         params: { date },
         headers: {
-          "x-rapidapi-key": process.env["X-RapidAPI-Key"] || "",
+          "x-rapidapi-key": apiKey,
           "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
           "Content-Type": "application/json",
         },
@@ -145,7 +163,7 @@ export async function getEvents(rawDate?: string): Promise<Match[]> {
       url: "https://free-api-live-football-data.p.rapidapi.com/football-get-matches-by-date",
       params: { date },
       headers: {
-        "x-rapidapi-key": process.env["X-RapidAPI-Key"] || "",
+        "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
         "Content-Type": "application/json",
       },
