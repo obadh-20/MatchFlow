@@ -128,8 +128,8 @@ export default function Matches() {
                         src={match.homeTeamBadgeUrl}
                         alt={match.homeTeam ?? "Home"}
                         fill
+                        sizes="48px"
                         className="object-cover"
-                        unoptimized
                       />
                     ) : (
                       <span className="text-xs font-bold text-gray-500">
@@ -155,8 +155,8 @@ export default function Matches() {
                         src={match.awayTeamBadgeUrl}
                         alt={match.awayTeam ?? "Away"}
                         fill
+                        sizes="48px"
                         className="object-cover"
-                        unoptimized
                       />
                     ) : (
                       <span className="text-xs font-bold text-gray-500">

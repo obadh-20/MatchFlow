@@ -20,9 +20,10 @@ interface PerformanceTrendChartProps {
 }
 
 export default function PerformanceTrendChart({ data }: PerformanceTrendChartProps) {
-  const latest = data[data.length - 1]?.rating ?? 0;
-  const first = data[0]?.rating ?? 0;
-  const change = ((latest - first) / first) * 100;
+  const isEmpty = !data || data.length === 0;
+  const latest = isEmpty ? 0 : data[data.length - 1]?.rating ?? 0;
+  const first = isEmpty || !data[0]?.rating ? 0 : data[0].rating;
+  const change = first !== 0 ? ((latest - first) / first) * 100 : 0;
   const isPositive = change >= 0;
 
   return (
@@ -35,12 +36,11 @@ export default function PerformanceTrendChart({ data }: PerformanceTrendChartPro
           </h3>
           <span
             className={`flex items-center gap-0.5 text-xs font-bold ${
-              isPositive ? "text-green-600" : "text-red-500"
+              isEmpty ? "text-gray-400" : isPositive ? "text-green-600" : "text-red-500"
             }`}
           >
-            <TrendingUp className={`w-3 h-3 ${!isPositive && "rotate-180"}`} />
-            {isPositive ? "+" : ""}
-            {change.toFixed(1)}%
+            <TrendingUp className={`w-3 h-3 ${!isEmpty && !isPositive && "rotate-180"}`} />
+            {isEmpty ? "—" : `${isPositive ? "+" : ""}${change.toFixed(1)}%`}
           </span>
         </div>
       </div>

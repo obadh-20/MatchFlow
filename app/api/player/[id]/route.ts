@@ -18,13 +18,23 @@ export async function GET(
     );
   }
 
+  const apiKey = process.env["X-RapidAPI-Key"];
+  if (!apiKey) {
+    console.log("API key not configured for player detail");
+    return NextResponse.json(
+      { error: "API key is not configured" },
+      { status: 500 }
+    );
+  }
+
   try {
     const response = await axios.request({
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-get-player-detail",
       params: { playerid: id },
+      timeout: 5000,
       headers: {
-        "x-rapidapi-key": process.env["X-RapidAPI-Key"] || "",
+        "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",
         "Content-Type": "application/json",
       },
@@ -34,14 +44,21 @@ export async function GET(
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
-      console.log(`Player API error (status ${status}): falling back to mock data`);
+      console.log(`Player API error (status ${status})`);
 
-      // If quota exceeded or any API failure, return mock data
-      console.log("API request failed — falling back to mock player data");
-      return NextResponse.json({
-        status: "success",
-        response: mockPlayerData,
-      });
+      // Only fall back to mock data for quota/rate-limit errors
+      if (status === 429 || status === 403) {
+        console.log("API quota/rate limit exceeded — falling back to mock player data");
+        return NextResponse.json({
+          status: "success",
+          response: mockPlayerData,
+        });
+      }
+
+      return NextResponse.json(
+        { error: `Failed to fetch player details: ${error.message}` },
+        { status: status ?? 500 }
+      );
     }
     return NextResponse.json(
       { error: "Failed to fetch player details" },

@@ -30,29 +30,44 @@ function PlayerContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchPlayer = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`/api/player/${id}`);
+        const response = await fetch(`/api/player/${id}`, { signal: controller.signal });
 
         if (!response.ok) {
           throw new Error("Failed to fetch player details");
         }
 
         const result = await response.json();
-        setData(result.response);
+        if (!controller.signal.aborted) {
+          setData(result.response);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return;
+        }
+        if (!controller.signal.aborted) {
+          setError(err instanceof Error ? err.message : "An error occurred");
+        }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     if (id) {
       fetchPlayer();
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [id]);
 
   if (loading) {

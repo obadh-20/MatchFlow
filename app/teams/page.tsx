@@ -22,6 +22,7 @@ export default function TeamsPage() {
       setLoading(true);
       setError(null);
       setSearched(true);
+      setTeams([]);
 
       const response = await fetch(`/api/teams?t=${encodeURIComponent(searchTerm)}`);
 
@@ -49,7 +50,9 @@ export default function TeamsPage() {
 
       {/* Search Form */}
       <form onSubmit={handleSearch} className="flex gap-3 mb-8">
+        <label htmlFor="team-search" className="sr-only">Search for a team</label>
         <input
+          id="team-search"
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -89,7 +92,7 @@ export default function TeamsPage() {
       )}
 
       {/* Teams Grid */}
-      {teams.length > 0 && (
+      {!loading && !error && teams.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {teams.map((team) => (
             <div

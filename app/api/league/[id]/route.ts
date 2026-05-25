@@ -34,6 +34,7 @@ export async function GET(
       method: "GET",
       url: "https://free-api-live-football-data.p.rapidapi.com/football-get-league-detail",
       params: { leagueid: id },
+      timeout: 5000,
       headers: {
         "x-rapidapi-key": apiKey,
         "x-rapidapi-host": "free-api-live-football-data.p.rapidapi.com",

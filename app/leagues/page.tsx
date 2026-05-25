@@ -27,7 +27,11 @@ export default function LeaguesPage() {
         const data = await response.json();
 
         // The API returns { status, response: { leagues: [...] } }
-        const leagueList = data?.response?.leagues ?? data?.leagues ?? [];
+        const leagueList = Array.isArray(data?.response?.leagues)
+          ? data.response.leagues
+          : Array.isArray(data?.leagues)
+            ? data.leagues
+            : [];
 
         setLeagues(leagueList);
       } catch (err) {

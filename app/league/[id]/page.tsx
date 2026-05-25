@@ -17,12 +17,14 @@ function LeagueDetailContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchDetail = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`/api/league/${id}`);
+        const response = await fetch(`/api/league/${id}`, { signal: controller.signal });
 
         if (!response.ok) {
           if (response.status === 404) {
@@ -35,8 +37,18 @@ function LeagueDetailContent() {
 
         // Extract detail from { status, response: { detail: ... } }
         const leagueDetail = data?.response?.detail ?? data?.detail ?? null;
+        // Normalize teams: ensure it's always an array (flatten one level if nested)
+        if (leagueDetail && !Array.isArray(leagueDetail.teams)) {
+          leagueDetail.teams = [];
+        } else if (leagueDetail) {
+          leagueDetail.teams = leagueDetail.teams.flat();
+        }
         setDetail(leagueDetail);
       } catch (err) {
+        if ((err instanceof DOMException && err.name === "AbortError") ||
+            (err instanceof Error && err.name === "AbortError")) {
+          return;
+        }
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setLoading(false);
@@ -46,6 +58,10 @@ function LeagueDetailContent() {
     if (id) {
       fetchDetail();
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [id]);
 
   // Loading state

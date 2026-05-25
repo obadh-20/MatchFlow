@@ -217,7 +217,6 @@ export default function MatchesCarousel() {
                                   alt={match.homeTeam ?? "Home"}
                                   fill
                                   className="object-cover"
-                                  unoptimized
                                 />
                               ) : (
                                 <span className="text-xs font-bold text-gray-500">
@@ -246,7 +245,6 @@ export default function MatchesCarousel() {
                                   alt={match.awayTeam ?? "Away"}
                                   fill
                                   className="object-cover"
-                                  unoptimized
                                 />
                               ) : (
                                 <span className="text-xs font-bold text-gray-500">
@@ -294,7 +292,6 @@ export default function MatchesCarousel() {
                           alt={team.name}
                           fill
                           className="object-cover"
-                          unoptimized
                         />
                       </div>
                       <span className="font-medium text-gray-800">

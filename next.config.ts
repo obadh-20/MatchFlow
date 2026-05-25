@@ -7,7 +7,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "free-api-live-football-data.p.rapidapi.com",
+      },
+      {
+        protocol: "https",
+        hostname: "media.api-sports.io",
       },
     ],
     formats: ["image/avif", "image/webp"],

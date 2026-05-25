@@ -31,19 +31,25 @@ const Navbar = () => {
       return;
     }
 
+    const controller = new AbortController();
+
     const fetchResults = async () => {
       setSearchLoading(true);
       setSearchError(null);
       try {
         const response = await fetch(
-          `/api/search?q=${encodeURIComponent(debouncedTerm)}`
+          `/api/search?q=${encodeURIComponent(debouncedTerm)}`,
+          { signal: controller.signal }
         );
         if (!response.ok) throw new Error("Search failed");
         const data = await response.json();
         const searchResults = data?.response ?? data?.results ?? null;
         setResults(searchResults);
         setShowDropdown(true);
-      } catch {
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return;
+        }
         setResults(null);
         setSearchError("Search failed. Please try again.");
         setShowDropdown(true);
@@ -53,6 +59,10 @@ const Navbar = () => {
     };
 
     fetchResults();
+
+    return () => {
+      controller.abort();
+    };
   }, [debouncedTerm]);
 
   // Close dropdown on click outside
